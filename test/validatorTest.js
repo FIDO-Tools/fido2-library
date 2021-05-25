@@ -66,16 +66,6 @@ describe("attestation validation", function() {
 			return assert.isRejected(attResp.validateExpectations(), Error, "expectations should be of type Map");
 		});
 
-		it("throws if too many expectations", function() {
-			attResp.expectations.set("foo", "bar");
-			return assert.isRejected(attResp.validateExpectations(), Error, "wrong number of expectations: should have 3 but got 4");
-		});
-
-		it("throws if too many expectations, but expectations are valid", function() {
-			attResp.expectations.set("prevCounter", 42);
-			return assert.isRejected(attResp.validateExpectations(), Error, "wrong number of expectations: should have 3 but got 4");
-		});
-
 		it("throws if missing challenge", function() {
 			attResp.expectations.delete("challenge");
 			return assert.isRejected(attResp.validateExpectations(), Error, "expectation did not contain value for 'challenge'");
@@ -475,6 +465,10 @@ describe("attestation validation", function() {
 	});
 
 	describe("validateRpIdHash", function() {
+		after(() => {
+			attResp.expectations.delete("rpId");
+		})
+
 		it("returns true when matches", async function() {
 			var ret = await attResp.validateRpIdHash();
 			assert.isTrue(ret);
@@ -482,7 +476,13 @@ describe("attestation validation", function() {
 		});
 
 		it("throws when it doesn't match", function() {
-			attResp.clientData.set("origin", "https://google.com");
+			attResp.expectations.set("origin", "https://google.com");
+			return assert.isRejected(attResp.validateRpIdHash(), Error, "authnrData rpIdHash mismatch");
+		});
+
+		it("throws when it doesn't match in case of invalid rpId", function() {
+			attResp.expectations.set("origin", "localhost");
+			attResp.expectations.set("rpId", "google.com");
 			return assert.isRejected(attResp.validateRpIdHash(), Error, "authnrData rpIdHash mismatch");
 		});
 

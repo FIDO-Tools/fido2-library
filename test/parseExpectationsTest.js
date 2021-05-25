@@ -57,6 +57,28 @@ describe("parseExpectations", function() {
 		}, Error, "origin was malformatted");
 	});
 
+	it("throws if expected rpId is invalid type", function() {
+		var exp = {
+			rpId: 23,
+			origin: "https://webauthn.bin.coffee",
+			challenge: "4BS1YJKRCeCVoLdfG_b66BuSQ-I2n34WsLFvy62fpIVFjrm32_tFRQixX9U8EBVTriTkreAp-1nDvYboRK9WFg",
+		};
+		assert.throws(() => {
+			parser.parseExpectations(exp);
+		}, Error, "expected 'rpId' should be string, got number");
+	});
+
+	it("throws if expected rpId is invalid", function() {
+		var exp = {
+			rpId: "foobar",
+			origin: "https://webauthn.bin.coffee",
+			challenge: "4BS1YJKRCeCVoLdfG_b66BuSQ-I2n34WsLFvy62fpIVFjrm32_tFRQixX9U8EBVTriTkreAp-1nDvYboRK9WFg",
+		};
+		assert.throws(() => {
+			parser.parseExpectations(exp);
+		}, Error, "rpId is not a valid eTLD+1");
+	});
+
 	it("coerces Array challenge to base64url", function() {
 		var exp = {
 			origin: "https://webauthn.bin.coffee",

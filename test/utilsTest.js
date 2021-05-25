@@ -35,13 +35,13 @@ describe("utils", function() {
 		it("throws on undefined origin", function() {
 			assert.throws(() => {
 				checkOrigin(undefined);
-			}, Error, "Invalid URL: undefined");
+			}, Error, "Invalid URL");
 		});
 
 		it("throws invalid url", function() {
 			assert.throws(() => {
 				checkOrigin("qwertyasdf");
-			}, Error, "Invalid URL: qwertyasdf");
+			}, Error, "Invalid URL");
 		});
 
 		it("allows localhost", function() {
@@ -72,13 +72,13 @@ describe("utils", function() {
 		it("throws on invalid eTLD+1", function() {
 			assert.throws(() => {
 				checkRpId("test");
-			}, Error, "origin is not a valid eTLD+1");
+			}, Error, "rpId is not a valid eTLD+1");
 		});
 
 		it("throws on undefined rpId", function() {
 			assert.throws(() => {
 				checkRpId(undefined);
-			}, Error, "Invalid URL: undefined");
+			}, Error, "rpId must be a string");
 		});
 
 

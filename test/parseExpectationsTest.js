@@ -44,7 +44,7 @@ describe("parseExpectations", function() {
 		};
 		assert.throws(() => {
 			parser.parseExpectations(exp);
-		}, TypeError, "Invalid URL: asdf");
+		}, TypeError, "Invalid URL");
 	});
 
 	it("throws if expected origin is https:443", function() {

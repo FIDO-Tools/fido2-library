@@ -467,7 +467,7 @@ describe("attestation validation", function() {
 	describe("validateRpIdHash", function() {
 		after(() => {
 			attResp.expectations.delete("rpId");
-		})
+		});
 
 		it("returns true when matches", async function() {
 			var ret = await attResp.validateRpIdHash();

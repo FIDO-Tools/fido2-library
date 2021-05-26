@@ -79,6 +79,17 @@ describe("parseExpectations", function() {
 		}, Error, "rpId is not a valid eTLD+1");
 	});
 
+	it("sets rpId properly on successful parsing", function() {
+		var exp = {
+			rpId: "google.com",
+			origin: "https://webauthn.bin.coffee",
+			challenge: "4BS1YJKRCeCVoLdfG_b66BuSQ-I2n34WsLFvy62fpIVFjrm32_tFRQixX9U8EBVTriTkreAp-1nDvYboRK9WFg",
+		};
+		var ret = parser.parseExpectations(exp);
+		assert.strictEqual(ret.get("rpId"), "google.com");
+		assert.strictEqual(ret.size, 3);
+	});
+
 	it("coerces Array challenge to base64url", function() {
 		var exp = {
 			origin: "https://webauthn.bin.coffee",

@@ -134,6 +134,30 @@ describe("attestation validation", function() {
 			return assert.isRejected(attResp.validateExpectations(), Error, "expected flag unknown: undefined");
 		});
 
+		it("throws on invalid rpId type", function() {
+			attResp.expectations.set("rpId", 123);
+			return assert.isRejected(attResp.validateExpectations(), Error, "rpId must be a string");
+		});
+
+		it("throws on invalid rpId", function() {
+			attResp.expectations.set("rpId", "test");
+			return assert.isRejected(attResp.validateExpectations(), Error, "rpId is not a valid eTLD+1");
+		});
+
+		it("works with valid rpId", async function() {
+			attResp.expectations.set("rpId", "google.com");
+			var ret = await attResp.validateExpectations();
+			assert.isTrue(ret);
+			assert.isTrue(attResp.audit.validExpectations);
+		});
+
+		it("works with localhost rpId", async function() {
+			attResp.expectations.set("rpId", "localhost");
+			var ret = await attResp.validateExpectations();
+			assert.isTrue(ret);
+			assert.isTrue(attResp.audit.validExpectations);
+		});
+
 		it("throws if counter is not a number");
 		it("throws if counter is negative");
 		it("throws if publicKey is not a string");

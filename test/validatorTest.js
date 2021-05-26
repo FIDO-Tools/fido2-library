@@ -22,6 +22,9 @@ describe("attestation validation", function() {
 				"challenge",
 				"flags",
 			]),
+			optionalExpectations: new Set([
+				"rpId",
+			]),
 			expectations: new Map([
 				["origin", "https://localhost:8443"],
 				["challenge", "33EHav-jZ1v9qwH783aU-j0ARx6r5o-YHh-wd7C6jPbd7Wh6ytbIZosIIACehwf9-s6hXhySHO-HHUjEwZS29w"],
@@ -64,6 +67,16 @@ describe("attestation validation", function() {
 		it("throws if expectations aren't Map", function() {
 			attResp.expectations = {};
 			return assert.isRejected(attResp.validateExpectations(), Error, "expectations should be of type Map");
+		});
+
+		it("throws if optionalExpectations aren't Set", function() {
+			attResp.optionalExpectations = { rpId: true };
+			return assert.isRejected(attResp.validateExpectations(), Error, "optionalExpectations should be of type Set");
+		});
+
+		it("should not throw if  optionalExpectations are array", async function() {
+			attResp.optionalExpectations = ["rpId"];
+			assert.isFulfilled(attResp.validateExpectations());
 		});
 
 		it("throws if too many expectations", function() {
@@ -699,6 +712,9 @@ describe("assertion validation", function() {
 				"flags",
 				"counter",
 				"publicKey",
+			]),
+			optionalExpectations: new Set([
+				"rpId",
 			]),
 			expectations: new Map([
 				["origin", "https://localhost:8443"],

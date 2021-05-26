@@ -66,6 +66,16 @@ describe("attestation validation", function() {
 			return assert.isRejected(attResp.validateExpectations(), Error, "expectations should be of type Map");
 		});
 
+		it("throws if too many expectations", function() {
+			attResp.expectations.set("foo", "bar");
+			return assert.isRejected(attResp.validateExpectations(), Error, "wrong number of expectations: should have 3 but got 4");
+		});
+
+		it("throws if too many expectations, but expectations are valid", function() {
+			attResp.expectations.set("prevCounter", 42);
+			return assert.isRejected(attResp.validateExpectations(), Error, "wrong number of expectations: should have 3 but got 4");
+		});
+
 		it("throws if missing challenge", function() {
 			attResp.expectations.delete("challenge");
 			return assert.isRejected(attResp.validateExpectations(), Error, "expectation did not contain value for 'challenge'");
